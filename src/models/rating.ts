@@ -7,6 +7,8 @@ interface Rating {
   message?: string;
   created_at?: Date;
   stayid?: string;
+  checkinDate?: string;
+  checkoutDate?: string;
 }
 
 export default Rating;

@@ -48,6 +48,7 @@ import TripPage from "containers/PlacePage/TripPage";
 import PlaceDetailPage from "containers/PlacePage/PlaceDetailPage";
 import OwnerStayStaticPage from "containers/OwnerPage/OwnerStayPage/OwnerStayStaticPage";
 import PageForgotPassword from "containers/PageForgotPassword/PageForgotPassword";
+import OwnerStayRatingPage from "containers/OwnerPage/OwnerStayRatingPage/OwnerStayRatingPage";
 // import { checkTokenExp } from "utils/token";
 
 export const pages: Page[] = [
@@ -74,6 +75,7 @@ export const pages: Page[] = [
   { path: "/listing-stay-map", component: ListingStayMapPage },
   { path: "/listing-stay/stay/:id", component: ListingStayDetailPage },
   { path: "/owner/static", component: OwnerStayStaticPage},
+  { path: "/owner/review/:id", component: OwnerStayRatingPage},
   //
   {path: "/owner", component: OwnerStayPage},
   //

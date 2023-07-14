@@ -139,6 +139,11 @@ const PlaceCardH: FC<PlaceCardHProps> = ({ className = "", data, userliked, dist
               </>
             )}
           </span>
+          {distance && (
+          <span className="text-base text-neutral-500 dark:text-neutral-400">
+            Cách bạn: {distance} km
+          </span>
+        )}
         </div>
       </div>
     );

@@ -70,6 +70,7 @@ export interface LocationStates {
   "/trip"?: {};
   "/listing-place/place/:id"?: {};
   "/owner/static"?: {};
+  "/owner/review/:id"?: {};
 }
 
 export type PathName = keyof LocationStates;

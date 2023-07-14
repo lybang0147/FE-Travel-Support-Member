@@ -5,6 +5,7 @@ import {
   HomeIcon,
   ArrowRightOnRectangleIcon,
   UserIcon,
+  ChartBarSquareIcon
 } from "@heroicons/react/24/outline";
 import User from "models/user";
 import { Fragment, useEffect, useState } from "react";
@@ -20,8 +21,6 @@ interface JwtPayload {
   roles: string[];
   exp: number; 
 }
-
-
 
 const solutionsFoot = [
   {
@@ -53,20 +52,21 @@ export default function AvatarDropdown() {
       href: `/booking`,
       icon: HomeIcon,
     },
-  ])
+  ]);
+  const [hasAddedSolution, setHasAddedSolution] = useState(false); // Track if the solution has been added
 
   useEffect(() => {
     if (user) {
       setAvatar(user.imgLink);
-      if (localStorage.getItem("token-UTEtravel")!=null)
-      {
-        setDecodedToken(jwt_decode<JwtPayload>(localStorage.getItem("token-UTEtravel")!))
+      if (localStorage.getItem("token-UTEtravel") != null) {
+        setDecodedToken(jwt_decode<JwtPayload>(localStorage.getItem("token-UTEtravel")!));
       }
     }
   }, [user]);
 
   useEffect(() => {
     const hasOwner = solutions.some((solution) => solution.name === "Trang quản lý phòng");
+    const hasStatic = solutions.some((solution) => solution.name === "Thống kê");
     if (decodedToken && decodedToken.roles.includes("ROLE_OWNER") && !hasOwner) {
       setSolutions((prevSolutions) => {
         const updatedSolutions = prevSolutions.map((solution) => {
@@ -74,7 +74,7 @@ export default function AvatarDropdown() {
             return {
               name: "Quản lý đặt phòng",
               href: "/ownerBooking",
-              icon: HomeIcon
+              icon: HomeIcon,
             };
           }
           return solution;
@@ -82,11 +82,22 @@ export default function AvatarDropdown() {
         const newSolution = {
           name: "Trang quản lý phòng",
           href: "/owner",
-          icon: UserIcon
+          icon: UserIcon,
         };
         return [...updatedSolutions, newSolution];
       });
+    }
 
+    if (decodedToken && decodedToken.roles.includes("ROLE_OWNER") && !hasStatic && !hasAddedSolution) {
+      setSolutions((prevSolutions) => {
+        const newSolution = {
+          name: "Thống kê",
+          href: "/owner/static",
+          icon: ChartBarSquareIcon,
+        };
+        return [...prevSolutions, newSolution];
+      });
+      setHasAddedSolution(true);
     }
   }, [decodedToken]);
 
@@ -106,10 +117,7 @@ export default function AvatarDropdown() {
             <Popover.Button
               className={`inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
-              <Avatar
-                sizeClass="w-8 h-8 sm:w-9 sm:h-9"
-                imgUrl={avatar && avatar}
-              />
+              <Avatar sizeClass="w-8 h-8 sm:w-9 sm:h-9" imgUrl={avatar && avatar} />
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -133,7 +141,7 @@ export default function AvatarDropdown() {
                           <item.icon aria-hidden="true" className="w-6 h-6" />
                         </div>
                         <div className="ml-4">
-                          <p className="text-sm font-medium ">{item.name}</p>
+                          <p className="text-sm font-medium">{item.name}</p>
                         </div>
                       </Link>
                     ))}
@@ -151,7 +159,7 @@ export default function AvatarDropdown() {
                           <item.icon aria-hidden="true" className="w-6 h-6" />
                         </div>
                         <div className="ml-4">
-                          <p className="text-sm font-medium ">{item.name}</p>
+                          <p className="text-sm font-medium">{item.name}</p>
                         </div>
                       </a>
                     ))}

@@ -16,7 +16,7 @@ import placesService from "api/placeApi";
 import toast from "react-hot-toast";
 import { SearchParams } from "types";
 import stayService from "api/stayApi";
-import { Autocomplete, Button, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, CircularProgress, Dialog, DialogContent, TextField, Typography } from "@mui/material";
 import Place from "models/place";
 import PlaceCardH from "./PlaceCardH";
 import { GoogleMap, InfoWindow, Marker, DirectionsService, DirectionsRenderer } from "@react-google-maps/api";
@@ -56,10 +56,12 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
   const [searchedPlaceKey, setSearchedPlaceKey] = useState("");
   const [searchPlaceResult, setSearchPlaceResult] = useState<Place[]>([]);
   const [tripPlaceData, setTripPlaceData] = useState<(TripPlaceData)[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   useEffect (() => {
     const fetchList = async () => {
       try {
         if (selectedStay !== null) {
+          setIsProcessing(true);
           const data = await placesService.getNearByPlaces(selectedStay.id ?? "");
           const transformedData = Object.entries(data).reduce<PlaceData[]>((acc, [key, value]) => {
             acc.push({ [key]: value } as Record<string, number>);
@@ -91,6 +93,10 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
       catch(error)
       {
         toast.error("Lỗi khi lấy dữ liệu chuyến đi. Vui lòng chọn địa điểm khác")
+      }
+      finally
+      {
+        setIsProcessing(false);
       }
     }
     fetchList();
@@ -190,6 +196,7 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
         {
           const updatedPlaces = [...currentPlaces, place];
           const placeIds = updatedPlaces.map((place) => place.id);
+          setIsProcessing(true);
           const newTrip = await placesService.buildNewRoute(selectedStay.id ?? "", placeIds);
           const transformedData = Object.entries(newTrip).reduce<PlaceData[]>((acc, [key, value]) => {
             acc.push({ [key]: value } as Record<string, number>);
@@ -221,6 +228,10 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
         catch(error)
         {
           toast.error("Lỗi khi lấy dữ liệu chuyến đi. Vui lòng chọn địa điểm khác")
+        }
+        finally
+        {
+          setIsProcessing(false);
         }
       }
     }
@@ -358,6 +369,11 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
               <StayCardH data={selectedStay} userliked={false} />
             </div>
           )}
+           {isProcessing ? (
+            <div className="flex justify-center items-center mt-8">
+              <CircularProgress />
+            </div>
+          ) : (
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="droppable">
                 {(provided) => (
@@ -378,10 +394,7 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
                               <PlaceCardH data={item.place} userliked={false} distance={item.distance} />
                             </div>
                             <div className="relative flex-shrink-0 w-full md:w-72 ">
-                              <Button
-                                onClick={() => handleRemovePlace(item.place.id)}
-                                className="mt-2"
-                              >
+                              <Button onClick={() => handleRemovePlace(item.place.id)} className="mt-2">
                                 Remove
                               </Button>
                             </div>
@@ -394,6 +407,8 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
                 )}
               </Droppable>
             </DragDropContext>
+          )}
+            
           </div>
           {/* <div className="flex mt-16 justify-center items-center">
             <Pagination />

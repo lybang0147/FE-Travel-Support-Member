@@ -258,10 +258,7 @@ const stayService = {
   deleteStay: async (id: string) => {
     return (await axiosService())({
       method: "DELETE",
-      url: `${STAY}`,
-      params: {
-        ids: id,
-      },
+      url: `${STAY}/${id}`,
     })
       .then((res) => res.data)
       .catch((error) => {

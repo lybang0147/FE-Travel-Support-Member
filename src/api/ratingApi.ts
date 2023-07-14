@@ -53,6 +53,32 @@ const ratingService = {
         throw error;
       });
   },
+  searchRating: async (id: string) => {
+    return (await axiosService())({
+      method: "GET",
+      url: `${STAY_RATING}/search`,
+      params: {
+        stayId: id,
+      },
+    })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw error;
+      });
+  },
+  reportRating: async (id: string) => {
+    return (await axiosService())({
+      method: "POST",
+      url: `${STAY_RATING}/reportRating`,
+      params: {
+        ratingId: id,
+      },
+    })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw error;
+      });
+  }
 };
 
 export default ratingService;

@@ -43,7 +43,7 @@ import {
 
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { MeetingRoom } from '@mui/icons-material';
+import { AttachMoney, Close, Feedback, MeetingRoom } from '@mui/icons-material';
 import toast from 'react-hot-toast';
 import Stay from 'models/stay';
 
@@ -58,7 +58,7 @@ interface Filters {
 const getStatusLabel = (status: boolean): JSX.Element => {
   const map: { [key: string]: { text: string; color: 'error' | 'success' } } = {
     false: {
-      text: 'Bị chặn',
+      text: 'Tạm ngưng phục vụ',
       color: 'error',
     },
     true: {
@@ -155,10 +155,7 @@ const OwnerStayPageContent: FC<RecentUsersTableProps> = ({}) => {
   const paginatedStays = applyPagination(stays, page, limit);
 
   const blueCardCount = stays.length;
-  const greenCardCount = stays.length;
-  const redCardCount = stays.length;
   
-
   const handleStatusFilterChange = (event: SelectChangeEvent<string>) => {
     const selectedValue = event.target.value;
     const parsedValue = selectedValue === "both" ? null : selectedValue === "true";
@@ -173,6 +170,22 @@ const OwnerStayPageContent: FC<RecentUsersTableProps> = ({}) => {
     setOpenDialog(false);
   };
 
+  const handleDeleteStay = async (stayId: string) => {
+    try
+    {
+      setIsProcessing(true);
+      await stayService.deleteStay(stayId);
+      toast.success("Ẩn/Hiện nơi ở thành công")
+    }
+    catch (error)
+    {
+      toast.error("Lỗi khi ẩn/hiện nơi ở")
+    }
+    finally
+    {
+      setIsProcessing(false);
+    }
+  }
 
 
   
@@ -191,27 +204,7 @@ const OwnerStayPageContent: FC<RecentUsersTableProps> = ({}) => {
               {blueCardCount}
             </Typography>
             <Typography variant="body2" component="div">
-              Tổng số tài khoản
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ backgroundColor: '#4caf50', color: '#fff', width: 300 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {greenCardCount}
-            </Typography>
-            <Typography variant="body2" component="div">
-              Tài khoản đang hoạt động
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ backgroundColor: '#f44336', color: '#fff', width: 300 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {redCardCount}
-            </Typography>
-            <Typography variant="body2" component="div">
-              Tài khoản bị khóa
+              Tổng số nơi ở
             </Typography>
           </CardContent>
         </Card>
@@ -296,7 +289,7 @@ const OwnerStayPageContent: FC<RecentUsersTableProps> = ({}) => {
                       {stay.province?.name}
                     </Typography>
                   </TableCell>
-                    <TableCell align="right">{getStatusLabel(stay.status===1)}</TableCell>
+                    <TableCell align="right">{getStatusLabel(stay.hidden===false)}</TableCell>
                     <TableCell align="right">
                       <Tooltip title="Thay đổi thông tin" arrow>
                         <IconButton
@@ -324,6 +317,36 @@ const OwnerStayPageContent: FC<RecentUsersTableProps> = ({}) => {
                           <MeetingRoom fontSize="small" />
                         </IconButton>
                       </Tooltip>
+                      <Tooltip title="Quản lý đánh giá" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': { background: theme.palette.success.light },
+                            color: theme.palette.success.main,
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => window.location.href = `/owner/review/${stay.id}`}
+                        >
+                          <Feedback fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip
+                        title={stay.hidden ? "Tiếp tục kinh doanh" : "Tạm ngưng phục vụ"}
+                        arrow
+                      >
+                        <IconButton
+                          sx={{
+                            '&:hover': { background: theme.palette.success.light },
+                            color: theme.palette.error.main,
+                          }}
+                          color="inherit"
+                          size="small"
+                          onClick={() => handleDeleteStay(stay.id ?? "")}
+                        >
+                          {stay.hidden ? <AttachMoney fontSize="small" /> : <Close fontSize="small" />}
+                        </IconButton>
+                      </Tooltip>
+
                   </TableCell>
                 </TableRow>
               );
