@@ -363,7 +363,7 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
           {selectedStay != null && (
             <div
               key={selectedStay.id}
-              onMouseEnter={() => setCurrentHoverID(selectedStay.id ?? "")}
+              onMouseEnter={() => {setCurrentHoverID(selectedStay.id ?? "")}}
               onMouseLeave={() => setCurrentHoverID(-1)}
             >
               <StayCardH data={selectedStay} userliked={false} />
@@ -388,8 +388,13 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
                           >
                             <div
                               key={item.place.id}
-                              onMouseEnter={() => setCurrentHoverID(item.place.id)}
-                              onMouseLeave={() => setCurrentHoverID(-1)}
+                              onMouseEnter={() => {
+                                setCurrentHoverID(item.place.id)
+                                setSelectedPlace(item.place);
+                                setMapCenter(map => ({ ...map, lat: item.place.latitude, lng: item.place.longitude}));
+                              }}
+                              onMouseLeave={() => {setCurrentHoverID(-1)
+                              setSelectedPlace(null)}}
                             >
                               <PlaceCardH data={item.place} userliked={false} distance={item.distance} />
                             </div>

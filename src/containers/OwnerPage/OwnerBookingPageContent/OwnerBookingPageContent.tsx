@@ -77,7 +77,7 @@ const getStatusLabel = (status: number): JSX.Element => {
       color: 'warning',
     },
     5: {
-      text: 'Đã thanh toán',
+      text: 'Đã hoàn thành',
       color: 'success', 
     },
   };
@@ -170,8 +170,9 @@ const OwnerBookingPageContent: FC<RecentUsersTableProps> = ({}) => {
   const paginatedBookings = applyPagination(bookings, page, limit);
 
   const blueCardCount = bookings.length;
-  const greenCardCount = bookings.length;
-  const redCardCount = bookings.length;
+  const greenCardCount = bookings.filter(booking => booking.status === 5).length;
+  const lightBlueCardCount = bookings.filter(booking => booking.status === 1).length;
+  const redCardCount = bookings.filter(booking => booking.status === 3 || booking.status === 2 ).length;
   
 
   const handleStatusFilterChange = (event: SelectChangeEvent<string>) => {
@@ -258,13 +259,23 @@ const OwnerBookingPageContent: FC<RecentUsersTableProps> = ({}) => {
             </Typography>
           </CardContent>
         </Card>
-        <Card sx={{ backgroundColor: '#f44336', color: '#fff', width: 300 }}>
+        <Card sx={{ backgroundColor: '#ef5350', color: '#fff', width: 300 }}>
           <CardContent>
             <Typography variant="h5" component="div">
               {redCardCount}
             </Typography>
             <Typography variant="body2" component="div">
-              Đã từ chối
+              Đã hủy
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card sx={{ backgroundColor: '#42a5f5', color: '#fff', width: 300 }}>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              {lightBlueCardCount}
+            </Typography>
+            <Typography variant="body2" component="div">
+              Chờ xác nhận
             </Typography>
           </CardContent>
         </Card>
@@ -357,6 +368,8 @@ const OwnerBookingPageContent: FC<RecentUsersTableProps> = ({}) => {
                           -{bookingRoom.voucher.name}
                         </Typography>
                       )}
+                      <br></br>
+                      Số lượng khách: {booking.totalPeople}
                     </Typography>
                   ))}
                   </TableCell>

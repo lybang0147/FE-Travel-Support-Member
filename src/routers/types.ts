@@ -71,6 +71,7 @@ export interface LocationStates {
   "/listing-place/place/:id"?: {};
   "/owner/static"?: {};
   "/owner/review/:id"?: {};
+  "/listing-place/:id"?: {};
 }
 
 export type PathName = keyof LocationStates;

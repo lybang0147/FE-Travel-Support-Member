@@ -175,6 +175,7 @@ const OwnerStayPageContent: FC<RecentUsersTableProps> = ({}) => {
     {
       setIsProcessing(true);
       await stayService.deleteStay(stayId);
+      setNeedFetch(!needFetch);
       toast.success("Ẩn/Hiện nơi ở thành công")
     }
     catch (error)

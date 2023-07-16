@@ -18,7 +18,7 @@ const CardCategory3: FC<CardCategory3Props> = ({
 
   return (
     <Link
-      to={`/listing-stay/${id}`}
+      to={`/listing-place/${id}`}
       className={`nc-CardCategory3 flex flex-col ${className}`}
       data-nc-id="CardCategory3"
     >
@@ -40,7 +40,7 @@ const CardCategory3: FC<CardCategory3Props> = ({
         <span
           className={`block mt-2 text-sm text-neutral-6000 dark:text-neutral-400`}
         >
-          {convertNumbThousand(placeCount || 0)} địa điểm
+          
         </span>
       </div>
     </Link>

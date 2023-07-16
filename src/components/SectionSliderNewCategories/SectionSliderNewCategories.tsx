@@ -149,16 +149,7 @@ const SectionSliderNewCategories: FC<SectionSliderNewCategoriesProps> = ({
   };
 
   const renderCard = (item: Province, index: number) => {
-    switch (categoryCardType) {
-      case "card3":
-        return <CardCategory3 taxonomy={item} />;
-      case "card4":
-        return <CardCategory4 taxonomy={item} />;
-      case "card5":
-        return <CardCategory5 taxonomy={item} />;
-      default:
-        return <CardCategory3 taxonomy={item} />;
-    }
+    return <CardCategory3 taxonomy={item} />;
   };
 
   return (
