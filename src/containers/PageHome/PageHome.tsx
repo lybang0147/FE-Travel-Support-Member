@@ -11,6 +11,7 @@ import SectionBecomeAnAuthor from "components/SectionBecomeAnAuthor/SectionBecom
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "redux/store";
 import { getAllProvince } from "redux/slices/provinceSlice";
+import ChatBubble from "containers/ChatGPTBubble";
 
 function PageHome() {
   // const dispatch = useDispatch<AppDispatch>();
@@ -77,6 +78,7 @@ function PageHome() {
         </div>
         {/* SECTION */}
         <SectionSubscribe2 />
+          <ChatBubble />
         {/* SECTION 1
         <SectionSliderNewCategories
           heading="Explore by types of stays"

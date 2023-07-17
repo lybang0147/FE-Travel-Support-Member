@@ -46,6 +46,8 @@ import { Select } from "@mui/base";
 import Voucher from "models/voucher";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import placesService from "api/placeApi";
+import Place from "models/place";
+import CardCategory4 from "components/CardCategory4/CardCategory4";
 export interface ListingStayDetailPageProps {
   className?: string;
   isPreviewMode?: boolean;
@@ -86,7 +88,7 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
   const [stayVouchers,setStayVouchers] = useState<Voucher[]>([]);
   const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string>("");
-  const [nearByPlace, setNearByPlace] = useState([]);
+  const [nearByPlace, setNearByPlace] = useState<Place[]>([]);
 
   const handleClose = () => {
 
@@ -398,9 +400,16 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
       setSelectedRoom(room.id);
       setVoucherDialogOpen(true);
     }
-    catch(error)
+    catch(error: any) 
     {
-      toast("Lỗi khi lấy danh sách voucher");
+      if (error.name && error.name=="InvalidTokenError")
+      {
+        toast.error("Vui lòng đăng nhập để sử dụng tính năng này")
+      }
+      else
+      {
+        toast.error("Lỗi khi lấy danh sách voucher");
+      }
     }
     finally
     {
@@ -572,32 +581,6 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
           </h2>
           <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 
-          {/* Content */}
-          {/* <div className="space-y-5">
-            <FiveStartIconForRate
-              iconClass="w-6 h-6"
-              className="space-x-0.5"
-              onRating={(rate) => setRating({ ...rating, rate: rate })}
-            />
-            <div className="relative">
-              <Input
-                fontClass=""
-                sizeClass="h-16 px-4 py-3"
-                rounded="rounded-3xl"
-                placeholder="Hãy chia sẽ cảm nghĩ của bạn nào ..."
-                onChange={(e) =>
-                  setRating({ ...rating, message: e.target.value })
-                }
-              />
-              <ButtonCircle
-                className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                size=" w-12 h-12 "
-                onClick={handleRating}
-              >
-                <ArrowRightIcon className="w-5 h-5" />
-              </ButtonCircle>
-            </div>
-          </div> */}
 
           {/* comment */}
           <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
@@ -620,25 +603,46 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
     );
   };
 
-  // useEffect(() => {
-  //   const searchNearbyPlaces = async () => {
-  //     try 
-  //     {
-  //       const data = await placesService.getNearByPlaces(stay.latitude ?? 0,stay.longitude ?? 0);
-  //       const firstFiveResults = data.results.slice(0, 5);
-  //       setNearByPlace(firstFiveResults);
-  //       console.log(nearByPlace);
-  //     }
-  //     catch(error)
-  //     {
-  //       console.log(error);
-  //     }
-  //   };
-  //   searchNearbyPlaces();
-  // }, [id]);
+  useEffect(() => {
+    const searchNearbyPlaces = async () => {
+      try 
+      {
+        const data = await placesService.findNearByPlaces(stay.id ?? "");
+        setNearByPlace(data);
+        console.log(nearByPlace);
+      }
+      catch(error)
+      {
+        console.log(error);
+      }
+    };
+    searchNearbyPlaces();
+  }, [id]);
 
-
-
+  const renderSection5 = () => {
+    return (
+      nearByPlace.length > 0 && (
+        <div className="listingSection__wrap">
+          {/* HEADING */}
+          <h2 className="text-2xl font-semibold">Địa điểm gần đây</h2>
+          <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+  
+          {/* nearby places */}
+          <div className="grid grid-cols-2 gap-4">
+            {nearByPlace.map((place: Place, index: number) => (
+              <CardCategory4
+                className="py-8"
+                key={place.id}
+                taxonomy={place}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    );
+  };
+  
+  
   const renderSectionMap = () => {
     if (!stay || stay.latitude === undefined || stay.longitude === undefined) {
       return null; 
@@ -879,8 +883,8 @@ const ListingStayDetailPage: FC<ListingStayDetailPageProps> = ({
           {renderSection3()}
           {renderSection4()}
           {/* {renderSectionCheckIndate()} */}
-          {/* {renderSection5()} */}
           {renderSectionMap()}
+          {renderSection5()}
           {renderSection6()}
           {/* {renderSection8()} */}
           <Dialog open={voucherDialogOpen} onClose={handleCloseVoucherDialog}>

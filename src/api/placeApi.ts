@@ -19,6 +19,19 @@ const placesService = {
             throw error;
           });
       },
+    findNearByPlaces: async (stayId: string): Promise<any> => {
+      return await axios({
+        method: "GET",
+        url: `${PLACE}/nearByPlace`,
+        params: {
+          stayId: stayId,
+        },
+      })
+        .then((res) => res.data)
+        .catch((error) => {
+          throw error;
+        });
+    },
     getPlaceByProvince: async (provinceId:string): Promise<Place[]> => {
       return await axios({
         method: "GET",

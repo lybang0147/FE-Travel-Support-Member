@@ -452,7 +452,7 @@ const stayService = {
   },
   getAvailableRoom: async (data: any) : Promise<Room[]> =>
   {
-    return  (await axiosService())({
+    return await axios({
       method: "GET",
       url: `${ROOM}/searchAll`,
       params: data
