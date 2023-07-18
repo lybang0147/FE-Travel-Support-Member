@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import facebookSvg from "images/Facebook.svg";
 import twitterSvg from "images/Twitter.svg";
 import googleSvg from "images/Google.svg";
@@ -43,6 +43,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch<AppDispatch>();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const {
     control,
@@ -56,6 +57,7 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
     },
   });
   const onRegister: SubmitHandler<InputsType> = async (data: InputsType) => {
+    setIsProcessing(true);
     const response = await dispatch(registerForCustomer(data));
     switch (response.payload) {
       case "EMAIL_EXISTS":
@@ -63,14 +65,17 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
           type: "email_exists",
           message: "Tài khoản đã được đăng ký rồi bạn ơi",
         });
+        setIsProcessing(false);
         break;
       case "Password phải từ 8 kí tự trở lên":
         setError("password", {
           type: "invalid_password",
           message: "Mật khẩu phải từ 8 kí tự trở lên nha bạn ơi",
         });
+        setIsProcessing(false);
         break;
       default:
+        setIsProcessing(false);
         navigate("/login");
         break;
     }
@@ -186,7 +191,9 @@ const PageSignUp: FC<PageSignUpProps> = ({ className = "" }) => {
                 <small className="text-red-500">{` ${errors.password.message}`}</small>
               )}
             </label>
-            <ButtonPrimary type="submit">Đăng kí</ButtonPrimary>
+            <ButtonPrimary type="submit" disabled={isProcessing}>
+              {isProcessing ? "Vui lòng chờ..." : "Đăng ký"}
+            </ButtonPrimary>
           </form>
 
           {/* ==== */}

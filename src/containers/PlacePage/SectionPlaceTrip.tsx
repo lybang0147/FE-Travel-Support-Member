@@ -129,7 +129,7 @@ const SectionPlaceTrip: FC<SectionGridHasMapProps> = () => {
           provinceId: "2151b654-0e7f-4d07-a378-48c697459627",
           searchKey: searchKey,
           pageIndex: 0,
-          pageSize: 5,
+          pageSize: 20,
         };
         const data = await stayService.getStayByCriteria(params);
         setStays(data.content);

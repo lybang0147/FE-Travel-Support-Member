@@ -151,8 +151,8 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
         voucherId: voucherIds
       });
       window.open(response);
-    } catch (error) {
-      toast.error("Lỗi khi Book lịch. Vui lòng kiểm tra lại ngày đặt! ");
+    } catch (error: any) {
+      toast.error(error.response.data.messageDescription);
       console.log(error)
     }
   };

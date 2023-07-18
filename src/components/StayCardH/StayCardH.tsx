@@ -52,7 +52,6 @@ const StayCardH: FC<StayCardHProps> = ({ className = "", data, userliked }) => {
               ? stayImage
               : [{ imgId: "19110330", imgLink: NoImage }]
           }
-          href={`/stay/${id}`}
         />
         <BtnLikeIcon isLiked={liked} className="absolute right-3 top-3" />
         {/* {saleOff && <SaleOffBadge className="absolute left-3 top-3" />} */}

@@ -52,7 +52,7 @@ const ChatBubble: React.FC = () => {
         },
         {
           headers: {
-            Authorization: "Bearer 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",
+            Authorization: "Bearer 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",
             "Content-Type": "application/json",
           },
         }
@@ -88,10 +88,10 @@ const ChatBubble: React.FC = () => {
         {isChatOpen && (
           <div className="flex flex-col max-w-md bg-white rounded-lg shadow-lg w-full md:max-w-xl" style={{ width: "400px", height: "400px" }}>
             {isCloseButtonVisible && (
-              <div className="flex justify-between mb-2 bg-green-600 p-2 w-full">
+              <div className="flex justify-between mb-2 bg-blue-500 p-2 w-full">
                 <div className="text-lg font-bold">Du lịch cùng ChatGPT</div>
                 <button
-                  className="w-8 h-8 bg-red-500 text-white rounded-full shadow-lg focus:outline-none"
+                  className="w-8 h-8 bg-blue-500 text-white rounded-full shadow-lg focus:outline-none"
                   onClick={toggleChat}
                 >
                   X

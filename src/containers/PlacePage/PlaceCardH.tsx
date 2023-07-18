@@ -49,7 +49,6 @@ const PlaceCardH: FC<PlaceCardHProps> = ({ className = "", data, userliked, dist
               ? placeImage
               : [{ imgId: "19110330", imgLink: NoImage }]
           }
-          href={`/stay/${id}`}
         />
         <BtnLikeIcon isLiked={liked} className="absolute right-3 top-3" />
         {/* {saleOff && <SaleOffBadge className="absolute left-3 top-3" />} */}
